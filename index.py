@@ -53,7 +53,7 @@ except:
 # Camera Loop
 print( "Press [Esc] to exit program" );
 wait = time.time();
-screen_shot = 0;
+screen_shot = -1;
 _, last_frame = cam.read();
 size = int( cam.get( 3 ) * cam.get( 4 ) );
 path = os.path.join( os.getcwd(), args.output );
@@ -73,20 +73,21 @@ while True:
                 diff_frame = cv2.absdiff( _frame, last_frame );
                 diff_frame = cv2.threshold( diff_frame, 30, 255, cv2.THRESH_BINARY )[1];
                 diff_frame = cv2.dilate( diff_frame, None, iterations = 2 );
-                if int( cv2.countNonZero( diff_frame ) ) / size < args.sensitivity:
+                if float( cv2.countNonZero( diff_frame ) ) / float( size ) < args.sensitivity:
                     capture = False;
             except:
+                print("err");
                 capture = False;
 
         if capture == True:
             try:
                 print( os.path.join( path, "img_" + str( int( time.time() ) ) + "_n" + str( screen_shot ) + ".jpg" ) )
-                # cv2.imwrite( os.path.join( path, "img_" + str( int( time.time() ) ) + "_n" + str( screen_shot ) + ".jpg" ), frame );
+                cv2.imwrite( os.path.join( path, "img_" + str( int( time.time() ) ) + "_n" + str( screen_shot ) + ".jpg" ), frame );
+                screen_shot = screen_shot + 1;
             except:
                 print( "[ ERRROR ] Writing File" );
-        if args.delay > 3: # only print if time delay great enough
-            print( "Screenshot: " + str( screen_shot ) );
-        screen_shot = screen_shot + 1;
+            if args.delay > 3: # only print if time delay great enough
+                print( "Screenshot: " + str( screen_shot ) );
         wait = time.time() + args.delay;
         last_frame = frame;
     if cv2.waitKey( 1 ) == 27:
