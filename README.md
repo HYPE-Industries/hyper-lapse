@@ -1,4 +1,4 @@
-# Hyper Timelapse Program
+# Hyper-Lapse Program
 Designed for the Hype Industries Prism Weapon Detection. This Python based program will take timelapse of any camera input that can connect to openCV. It it is very simple to use.
 
 
